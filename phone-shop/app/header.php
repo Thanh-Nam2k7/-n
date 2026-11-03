@@ -1,0 +1,6 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?= e($title??'Phone Corner') ?></title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link href="assets/style.css" rel="stylesheet"></head><body>
+<header><nav class="container nav-bar"><a class="brand" href="index.php">◉ PHONE CORNER</a><div class="links"><a href="index.php">Sản phẩm</a><a href="index.php?page=cart">Giỏ hàng (<?= array_sum($_SESSION['cart']??[]) ?>)</a><?php if(user()): ?><a href="index.php?page=orders">Đơn của tôi</a><?php if(user()['role']==='admin'): ?><a href="admin.php">Quản trị</a><?php endif; ?><form method="post"><?= csrf() ?><input type="hidden" name="action" value="logout"><button class="btn btn-sm btn-outline-light">Đăng xuất</button></form><?php else: ?><a href="index.php?page=login">Đăng nhập</a><a href="index.php?page=register">Đăng ký</a><?php endif; ?></div></nav></header>
+<main class="container py-4">
+<?php if(isset($_SESSION['flash'])): ?><div class="alert alert-success"><?= e($_SESSION['flash']) ?></div><?php unset($_SESSION['flash']);endif; ?>
+<?php if(isset($error)): ?><div class="alert alert-danger" role="alert"><?= e($error) ?></div><?php endif; ?>
