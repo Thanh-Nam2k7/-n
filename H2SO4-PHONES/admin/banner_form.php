@@ -1,0 +1,17 @@
+<?php
+require __DIR__.'/../app/bootstrap.php';$admin=require_admin();$id=(int)($_GET['id']??0);$original=$id?one('SELECT * FROM banners WHERE id=?',[$id]):null;
+if($id&&!$original){http_response_code(404);exit('Không tìm thấy banner.');}
+$d=$original??['title'=>'','subtitle'=>'','tag'=>'DEAL HOT','button_text'=>'Khám phá ngay','button_url'=>'catalog.php','gradient'=>'purple','sort_order'=>0,'is_active'=>1];$errors=[];
+if(post()){
+ check_csrf();foreach(['title','subtitle','tag','button_text','button_url','gradient','sort_order'] as $k)$d[$k]=trim((string)($_POST[$k]??''));$d['is_active']=isset($_POST['is_active'])?1:0;
+ if(mb_strlen($d['title'])<3||mb_strlen($d['title'])>120)$errors[]='Tiêu đề cần 3–120 ký tự.';
+ if(mb_strlen($d['subtitle'])>255)$errors[]='Mô tả tối đa 255 ký tự.';
+ if(mb_strlen($d['tag'])>70||mb_strlen($d['button_text'])>55)$errors[]='Nhãn hoặc chữ trên nút quá dài.';
+ if(!preg_match('/^(?:index|catalog|product)\.php(?:\?[a-zA-Z0-9_=%&.+-]*)?$/',$d['button_url']))$errors[]='Đường dẫn chỉ được trỏ tới trang nội bộ, ví dụ catalog.php?category=laptop.';
+ if(!in_array($d['gradient'],['purple','mint','amber'],true))$errors[]='Màu banner không phù hợp.';
+ if(!$errors){$args=[$d['title'],$d['subtitle'],$d['tag'],$d['button_text'],$d['button_url'],$d['gradient'],(int)$d['sort_order'],$d['is_active']];if($id){$args[]=$id;query('UPDATE banners SET title=?,subtitle=?,tag=?,button_text=?,button_url=?,gradient=?,sort_order=?,is_active=? WHERE id=?',$args);}else{query('INSERT INTO banners(title,subtitle,tag,button_text,button_url,gradient,sort_order,is_active) VALUES(?,?,?,?,?,?,?,?)',$args);}flash('success','Đã lưu banner.');redirect('admin/banners.php');}
+}
+$admin_title=$id?'Sửa banner':'Thêm banner';$admin_menu='banners';require __DIR__.'/partials/header.php';
+?>
+<div class="admin-panel admin-form"><a class="section-more" href="<?= url('admin/banners.php') ?>">← Quay lại banner</a><?php if($errors):?><div class="error-list"><?= e(implode(' ',$errors)) ?></div><?php endif;?><form method="post"><?= csrf_field() ?><div class="form-group"><label>Tiêu đề banner</label><input name="title" required value="<?= e($d['title']) ?>"></div><div class="form-group"><label>Mô tả ngắn</label><textarea name="subtitle"><?= e($d['subtitle']) ?></textarea></div><div class="form-row"><div class="form-group"><label>Nhãn banner</label><input name="tag" value="<?= e($d['tag']) ?>"></div><div class="form-group"><label>Chữ trên nút CTA</label><input name="button_text" value="<?= e($d['button_text']) ?>"></div></div><div class="form-row"><div class="form-group"><label>Liên kết nội bộ</label><input name="button_url" value="<?= e($d['button_url']) ?>"></div><div class="form-group"><label>Tông màu</label><select name="gradient"><option value="purple" <?= $d['gradient']==='purple'?'selected':'' ?>>Tím</option><option value="mint" <?= $d['gradient']==='mint'?'selected':'' ?>>Xanh mint</option><option value="amber" <?= $d['gradient']==='amber'?'selected':'' ?>>Vàng ấm</option></select></div></div><div class="form-group"><label>Thứ tự hiển thị</label><input type="number" name="sort_order" value="<?= (int)$d['sort_order'] ?>"></div><label><input type="checkbox" name="is_active" <?= $d['is_active']?'checked':'' ?>> Đang hiển thị</label><div style="margin-top:23px"><button type="submit" class="btn btn-primary">Lưu banner</button></div></form></div>
+<?php require __DIR__.'/partials/footer.php';?>

@@ -1,0 +1,17 @@
+H2SO4 PHONES - WEBSITE PHP CORE + MYSQL TRÊN XAMPP
+================================================
+
+1. Copy toàn bộ folder H2SO4-PHONES vào C:\xampp\htdocs\
+2. Mở XAMPP, START Apache và MySQL.
+3. Truy cập http://localhost/phpmyadmin/ -> Import file:
+   database/h2so4_phones.sql
+4. Nếu cần sửa kết nối MySQL: app/config.php
+5. Tạo tài khoản quản trị của bạn ở:
+   http://localhost/H2SO4-PHONES/setup.php
+6. Trang chủ: http://localhost/H2SO4-PHONES/
+7. Admin: http://localhost/H2SO4-PHONES/admin/
+
+Không có mật khẩu quản trị mặc định! Hãy tự tạo ở bước 5.
+Website dùng dữ liệu sản phẩm mẫu, chưa kết nối thanh toán thật.
+
+Đọc README.md để xem chi tiết cách cài, các tính năng và hướng dẫn demo.

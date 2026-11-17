@@ -1,0 +1,1 @@
+</div></div></div><script src="<?= url('assets/js/site.js') ?>"></script><script src="<?= url('assets/js/icons.js') ?>" defer></script><script>window.addEventListener('load',()=>{if(window.lucide)lucide.createIcons();});</script></body></html>
